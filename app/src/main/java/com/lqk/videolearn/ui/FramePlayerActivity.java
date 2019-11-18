@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.lqk.videolearn.R;
+import com.lqk.videolearn.grafika.FrameControlCallback;
 import com.lqk.videolearn.grafika.FramePlayer;
 
 import java.io.File;
@@ -34,12 +36,15 @@ public class FramePlayerActivity extends Activity implements View.OnClickListene
      */
     FramePlayer.PlayTask mPlayTask;
 
+    TextView mFpsTv;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_frame);
         mTextureView = findViewById(R.id.frame_player);
         findViewById(R.id.play).setOnClickListener(this);
+        mFpsTv = findViewById(R.id.fps);
     }
 
     @Override
@@ -66,7 +71,20 @@ public class FramePlayerActivity extends Activity implements View.OnClickListene
 
         FramePlayer framePlayer = null;
         try{
-            framePlayer = new FramePlayer(new File("sdcard/ffmpegtest/test.mp4"), surface);
+            FrameControlCallback callback = new FrameControlCallback();
+            callback.setFps(30);
+            framePlayer = new FramePlayer(new File("sdcard/ffmpegtest/test.mp4"),
+                    surface, callback, new FramePlayer.InfoCallback() {
+                @Override
+                public void onDrawFps(final int fps) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFpsTv.setText(String.format("FPS: %d", fps));
+                        }
+                    });
+                }
+            });
         }catch (IOException e){
             surface.release();
             return;

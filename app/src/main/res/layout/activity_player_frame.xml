@@ -8,6 +8,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"/>
 
+    <TextView
+        android:id="@+id/fps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textSize="13sp"
+        android:textColor="@color/colorDarkRed"/>
+
     <Button
         android:id="@+id/play"
         android:layout_width="wrap_content"

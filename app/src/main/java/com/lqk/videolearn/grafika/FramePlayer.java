@@ -21,21 +21,46 @@ import java.util.concurrent.Executors;
 public class FramePlayer {
     private static final String TAG = FramePlayer.TAG;
 
+    private long mTimeStep;
     private File mSourceFile;
     private int mWidth;
     private int mHeight;
+    private int mFrameRate;
+    private int mDrawFps;
     private Surface mOutputSurface;
+    private FrameCallback mFrameCallback;
+    private InfoCallback mInfoCallback;
 
     private volatile boolean mIsStop;
+
+    interface FrameCallback{
+
+        /**
+         * 预绘制
+         * @param presentationTimeUsec 当前的时间戳
+         */
+        void preRender(long presentationTimeUsec);
+
+        /**
+         * 绘制完成
+         */
+        void postRender();
+    }
+
+    public interface InfoCallback{
+        void onDrawFps(int fps);
+    }
 
     /**
      * 在此声明防止重复创建
      */
     private MediaCodec.BufferInfo mOutputBufferInfo = new MediaCodec.BufferInfo();
 
-    public FramePlayer(File sourceFile, Surface outputSurface) throws IOException {
+    public FramePlayer(File sourceFile, Surface outputSurface, FrameCallback callback, InfoCallback infoCallback) throws IOException {
         mSourceFile = sourceFile;
         mOutputSurface = outputSurface;
+        mFrameCallback = callback;
+        mInfoCallback = infoCallback;
         // 使用分离器 解析出视频信息
         MediaExtractor extractor = null;
         try {
@@ -53,6 +78,12 @@ public class FramePlayer {
             int width = format.getInteger(MediaFormat.KEY_WIDTH);
             int height = format.getInteger(MediaFormat.KEY_HEIGHT);
             int rotation = format.getInteger(MediaFormat.KEY_ROTATION);
+            if (format.containsKey(MediaFormat.KEY_FRAME_RATE)){
+                mFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE);
+            }
+            if (format.containsKey(MediaFormat.KEY_I_FRAME_INTERVAL)){
+                int iFrameInterval = format.getInteger(MediaFormat.KEY_I_FRAME_INTERVAL);
+            }
             if (rotation == 90){
                 mWidth = height;
                 mHeight = width;
@@ -74,6 +105,10 @@ public class FramePlayer {
 
     public int getHeight() {
         return mHeight;
+    }
+
+    public int getmFrameRate() {
+        return mFrameRate;
     }
 
     public void play() throws IOException {
@@ -101,6 +136,7 @@ public class FramePlayer {
             // 切换到 Running 状态
             decoder.start();
 
+            mTimeStep = System.currentTimeMillis();
             // 开始解码
             doExtract(extractor, videoTrack, decoder);
         } finally {
@@ -215,7 +251,10 @@ public class FramePlayer {
                     // 转换为纹理的表面纹理。我们无法控制什么时候出现在屏幕上，
                     // 但我们可以控制发布的速度缓冲器。
                     if (doRender){
-                        // 通知即将进行绘制
+                        if (mFrameCallback != null){
+                            // 通知即将进行绘制
+                            mFrameCallback.preRender(mOutputBufferInfo.presentationTimeUs);
+                        }
                     }
                     // 如果使用完缓冲区，请调用releaseOutputBuffer将
                     // 1.释放这个编解码器的缓冲区 或者
@@ -226,7 +265,22 @@ public class FramePlayer {
                     decoder.releaseOutputBuffer(decoderStatus, doRender);
                     // 在surface上绘制完成
                     if (doRender){
-                        // 通知已经绘制完成
+                        if (mFrameCallback != null){
+                            // 通知已经绘制完成
+                            mFrameCallback.postRender();
+                        }
+
+                        // 在绘制完成后 计算当前绘制帧率
+                        long curTimeStep = System.currentTimeMillis();
+                        if (curTimeStep - mTimeStep > 1000){
+                            mTimeStep = curTimeStep;
+                            if (mInfoCallback != null){
+                                mInfoCallback.onDrawFps(mDrawFps);
+                            }
+                            mDrawFps = 0;
+                        }else {
+                            ++mDrawFps;
+                        }
                     }
 
                     // 如果要循环loop
