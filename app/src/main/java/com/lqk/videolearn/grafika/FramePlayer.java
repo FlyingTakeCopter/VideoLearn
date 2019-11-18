@@ -50,8 +50,16 @@ public class FramePlayer {
             extractor.selectTrack(videoTrack);
             // 获取宽高
             MediaFormat format = extractor.getTrackFormat(videoTrack);
-            mWidth = format.getInteger(MediaFormat.KEY_WIDTH);
-            mHeight = format.getInteger(MediaFormat.KEY_HEIGHT);
+            int width = format.getInteger(MediaFormat.KEY_WIDTH);
+            int height = format.getInteger(MediaFormat.KEY_HEIGHT);
+            int rotation = format.getInteger(MediaFormat.KEY_ROTATION);
+            if (rotation == 90){
+                mWidth = height;
+                mHeight = width;
+            }else {
+                mWidth = width;
+                mHeight = height;
+            }
         } finally {
             if (extractor != null) {
                 extractor.release();
