@@ -1,6 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    // 版本配置文件
+    apply from: 'versions.gradle'
+
+    addRepos(repositories)
+
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://maven.aliyun.com/repository/google/'}
@@ -10,7 +15,9 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin/'}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath deps.android_gradle_plugin
+        classpath deps.kotlin.plugin
+//        classpath 'com.android.tools.build:gradle:3.5.1'
         
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
