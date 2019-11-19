@@ -33,7 +33,7 @@ public class FramePlayer {
 
     private volatile boolean mIsStop;
 
-    interface FrameCallback{
+    public interface FrameCallback{
 
         /**
          * 预绘制
