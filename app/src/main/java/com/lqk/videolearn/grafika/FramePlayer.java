@@ -98,7 +98,10 @@ public class FramePlayer {
             MediaFormat format = extractor.getTrackFormat(videoTrack);
             int width = format.getInteger(MediaFormat.KEY_WIDTH);
             int height = format.getInteger(MediaFormat.KEY_HEIGHT);
-            int rotation = format.getInteger(MediaFormat.KEY_ROTATION);
+            int rotation = 0;
+            if (format.containsKey(MediaFormat.KEY_ROTATION)){
+                rotation = format.getInteger(MediaFormat.KEY_ROTATION);
+            }
             if (format.containsKey(MediaFormat.KEY_FRAME_RATE)){
                 mFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE);
             }
@@ -128,7 +131,7 @@ public class FramePlayer {
         return mHeight;
     }
 
-    public int getmFrameRate() {
+    public int getFrameRate() {
         return mFrameRate;
     }
 

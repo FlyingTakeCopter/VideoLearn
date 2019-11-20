@@ -61,16 +61,22 @@ class FramePlayerActivity : Activity(), View.OnClickListener, FramePlayer.Player
             val framePlayer : FramePlayer
             try {
                 val callback = FrameControlCallback()
-                callback.setFps(30)
 
                 val infoCallback = FramePlayer.InfoCallback{
                     runOnUiThread{
                         mFps!!.text = String.format("FPS: %d", it)
                     }
                 }
-                framePlayer = FramePlayer(File("sdcard/ffmpegtest/test.mp4"),
+                framePlayer = FramePlayer(File("sdcard/v1080.mp4"),
                         surface, callback, infoCallback)
                 framePlayer.setLoop(true)
+
+                if (framePlayer.frameRate != 0){
+                    callback.setFps(framePlayer.frameRate)
+                }else{
+                    callback.setFps(30)
+                }
+
             } catch (e: IOException) {
                 surface.release()
                 return
