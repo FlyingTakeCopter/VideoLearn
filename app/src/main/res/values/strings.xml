@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">VideoLearn</string>
-    <color name="colorDarkRed">#FF0000</color>
-
+    <string name="play_button_text">Play</string>
+    <string name="stop_button_text">Stop</string>
 </resources>

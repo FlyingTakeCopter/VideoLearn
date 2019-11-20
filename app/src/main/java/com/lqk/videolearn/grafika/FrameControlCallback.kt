@@ -19,6 +19,8 @@ class FrameControlCallback : FramePlayer.FrameCallback {
      */
     private var mPrevMonoUsec: Long = 0
 
+    private var mLoopReset = false
+
     /**
      * 设置播放的帧率
      * @param fps fps
@@ -35,7 +37,12 @@ class FrameControlCallback : FramePlayer.FrameCallback {
             mPrevPresentUsec = presentationTimeUsec
         } else {
             // 计算偏移时长，如果是设定了速度，那么按照速率为偏移时长
-            var frameDelta: Long = if (mFixedFrameDurationUsec != 0L) {
+            if (mLoopReset){
+                mPrevPresentUsec = presentationTimeUsec - ONE_MILLION / 30
+                mLoopReset = false
+            }
+
+            var frameDelta = if (mFixedFrameDurationUsec != 0L) {
                 mFixedFrameDurationUsec
             } else {
                 presentationTimeUsec - mPrevPresentUsec
@@ -68,6 +75,10 @@ class FrameControlCallback : FramePlayer.FrameCallback {
             // 偏移当前时间戳 帧timestep
             mPrevPresentUsec += frameDelta
         }
+    }
+
+    override fun loopReset() {
+        mLoopReset = true
     }
 
     override fun postRender() {}

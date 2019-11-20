@@ -3,6 +3,8 @@ package com.lqk.videolearn.grafika;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
@@ -19,7 +21,7 @@ import java.util.concurrent.Executors;
  * @author lqk
  */
 public class FramePlayer {
-    private static final String TAG = FramePlayer.TAG;
+    private static final String TAG = FramePlayer.class.getSimpleName();
 
     private long mTimeStep;
     private File mSourceFile;
@@ -31,8 +33,20 @@ public class FramePlayer {
     private FrameCallback mFrameCallback;
     private InfoCallback mInfoCallback;
 
-    private volatile boolean mIsStop;
+    private volatile boolean mIsStopRequested;
 
+    private boolean mLoop;
+
+    /**
+     * 外部UI监听
+     */
+    public interface PlayerFeedback {
+        void playbackStopped();
+    }
+
+    /**
+     * 帧绘制监听
+     */
     public interface FrameCallback{
 
         /**
@@ -45,6 +59,11 @@ public class FramePlayer {
          * 绘制完成
          */
         void postRender();
+
+        /**
+         * 循环
+         */
+        void loopReset();
     }
 
     public interface InfoCallback{
@@ -56,7 +75,9 @@ public class FramePlayer {
      */
     private MediaCodec.BufferInfo mOutputBufferInfo = new MediaCodec.BufferInfo();
 
-    public FramePlayer(File sourceFile, Surface outputSurface, FrameCallback callback, InfoCallback infoCallback) throws IOException {
+    public FramePlayer(File sourceFile, Surface outputSurface,
+                       FrameCallback callback, InfoCallback infoCallback)
+            throws IOException {
         mSourceFile = sourceFile;
         mOutputSurface = outputSurface;
         mFrameCallback = callback;
@@ -111,6 +132,14 @@ public class FramePlayer {
         return mFrameRate;
     }
 
+    public void setLoop(boolean mLoop) {
+        this.mLoop = mLoop;
+    }
+
+    public void requestStop() {
+        mIsStopRequested = true;
+    }
+
     public void play() throws IOException {
         MediaExtractor extractor = null;
         MediaCodec decoder = null;
@@ -129,6 +158,7 @@ public class FramePlayer {
             extractor.selectTrack(videoTrack);
             // 创建解码器
             MediaFormat format = extractor.getTrackFormat(videoTrack);
+            // 获取当前设备的解码器类型 并创建一个解码器
             String mime = format.getString(MediaFormat.KEY_MIME);
             decoder = MediaCodec.createDecoderByType(mime);
             // 切换到 configure 状态 绑定surface
@@ -188,6 +218,10 @@ public class FramePlayer {
         boolean outputDone = false;
         boolean inputDone = false;
         while (!outputDone) {
+            if (mIsStopRequested){
+                // 收到停止请求
+                return;
+            }
             // 给解码器 喂数据
             if (!inputDone) {
                 // 获取 解码器 可用的输入 buffer 编号
@@ -239,10 +273,16 @@ public class FramePlayer {
                             "unexpected result from decoder.dequeueOutputBuffer: " +
                                     decoderStatus);
                 } else {
+                    // 循环
+                    boolean doLoop = false;
                     // decoderStatus >= 0
                     // 当前的 bufferinfo是终止符 停止读取解码器
                     if ((mOutputBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                        outputDone = true;
+                        if (mLoop){
+                            doLoop = true;
+                        }else {
+                            outputDone = true;
+                        }
                     }
                     // 判断当前是否要render
                     boolean doRender = (mOutputBufferInfo.size != 0);
@@ -284,13 +324,15 @@ public class FramePlayer {
                     }
 
                     // 如果要循环loop
-                    if (false){
+                    if (doLoop){
                         // 将分离器回到开始
                         extractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
-                        // 将编码器切会flush状态
-                        decoder.flush();
                         // 打开输入开关
                         inputDone = false;
+                        // 将编码器切会flush状态
+                        decoder.flush();
+                        // 通知外部
+                        mFrameCallback.loopReset();
                     }
                 }
 
@@ -299,16 +341,33 @@ public class FramePlayer {
         }
     }
 
+    /**
+     * 播放线程
+     */
     public static class PlayTask implements Runnable {
+        private static final int MSG_PLAY_STOPPED = 0;
         // 解码器
         private FramePlayer mPlayer;
         // 单线程化线程池
         ExecutorService singleThreadExecutor;
+        // 外部监听
+        PlayerFeedback mFeedback;
 
-        public PlayTask(FramePlayer mPlayer) {
+        private LocalHandler mLocalHandler;
+
+        private final Object mStopLock = new Object();
+        private boolean mStopped = false;
+
+        public PlayTask(FramePlayer mPlayer, PlayerFeedback callback) {
             this.mPlayer = mPlayer;
+            this.mFeedback = callback;
+
+            mLocalHandler = new LocalHandler();
         }
 
+        public void requestStop(){
+            mPlayer.requestStop();
+        }
 
         /**
          * 在线程池中启动播放器进行解码
@@ -318,12 +377,51 @@ public class FramePlayer {
             singleThreadExecutor.execute(this);
         }
 
+        public void waitForStop(){
+            synchronized (mStopLock){
+                while (!mStopped){
+                    try {
+                        mStopLock.wait();
+                    }catch (InterruptedException e){
+
+                    }
+                }
+            }
+        }
+
         @Override
         public void run() {
             try {
                 mPlayer.play();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }finally {
+                // 通知当前播放器已经停止
+                synchronized (mStopLock){
+                    mStopped = true;
+                    mStopLock.notifyAll();
+                }
+
+                // 通过handler 发送消息 以保证mFeedback可以在正确的线程上运行
+                mLocalHandler.sendMessage(mLocalHandler.obtainMessage(MSG_PLAY_STOPPED, mFeedback));
+
+            }
+        }
+
+        // 在线程中通过 handler的方式来通知外部UI更新 防止线程阻塞
+        private static class LocalHandler extends Handler {
+            @Override
+            public void handleMessage(Message msg) {
+                int what = msg.what;
+
+                switch (what) {
+                    case MSG_PLAY_STOPPED:
+                        PlayerFeedback fb = (PlayerFeedback) msg.obj;
+                        fb.playbackStopped();
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown msg " + what);
+                }
             }
         }
     }
