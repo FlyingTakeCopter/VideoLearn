@@ -29,6 +29,11 @@
             android:name=".ui.DoubleDecodeActivity"
             android:label="双解码显示" >
         </activity>
+
+        <activity
+            android:name=".ui.HardwareScalerActivity"
+            android:label="双解码显示" >
+        </activity>
     </application>
 
 </manifest>

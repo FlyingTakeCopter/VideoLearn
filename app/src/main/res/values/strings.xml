@@ -2,4 +2,11 @@
     <string name="app_name">VideoLearn</string>
     <string name="play_button_text">Play</string>
     <string name="stop_button_text">Stop</string>
+    <string name="surfaceSizeTiny">[tiny]</string>
+    <string name="surfaceSizeSmall">[small]</string>
+    <string name="surfaceSizeMedium">[medium]</string>
+    <string name="surfaceSizeFull">[full]</string>
+    <string name="flatShaded">flat shaded</string>
+    <string name="viewSizeLabel">Initial view size:</string>
+
 </resources>
