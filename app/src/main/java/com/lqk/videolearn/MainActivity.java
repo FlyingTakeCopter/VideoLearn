@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.lqk.videolearn.render.FGLViewActivity;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mList= (RecyclerView)findViewById(R.id.mList);
         mList.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         data=new ArrayList<>();
-        add("绘制形体",MainActivity.class);
+        add("绘制形体", FGLViewActivity.class);
 
         mList.setAdapter(new MenuAdapter());
     }
