@@ -22,7 +22,7 @@ class FlatShadedProgram {
         // 片元着色器
         private const val FRAGMENT_SHADER: String =
                 "precision mediump float;" +
-                "uniform vec uColor;" +  // 传入纯色
+                "uniform vec4 uColor;" +  // 传入纯色
                 "void main(){" +
                 "   gl_FragColor = uColor;" +
                 "}"
@@ -62,9 +62,9 @@ class FlatShadedProgram {
         maPostionLoc = glGetAttribLocation(mProgramHandle, "aPosition")
         GLUtil.checkLocation(maPostionLoc, "aPosition")
         muColorLoc = glGetUniformLocation(mProgramHandle, "uColor")
-        GLUtil.checkLocation(muColorLoc, "uColorLoc")
+        GLUtil.checkLocation(muColorLoc, "uColor")
         muMVPMatrixLoc = glGetUniformLocation(mProgramHandle, "uMVPMatrix")
-        GLUtil.checkLocation(muMVPMatrixLoc, "uMVPMatrixLoc")
+        GLUtil.checkLocation(muMVPMatrixLoc, "uMVPMatrix")
     }
 
     /**

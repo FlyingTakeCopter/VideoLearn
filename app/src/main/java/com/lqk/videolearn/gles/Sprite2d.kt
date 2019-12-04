@@ -50,15 +50,8 @@ class Sprite2d (drawable2d: Drawable2d){
             mMatrixReady = false
             field = value
         }
-    // 计算矩阵
+    // 模型 视图 矩阵
     var mModelViewMatrix : FloatArray? = null
-        get(){
-            // 当参数发生变化时 重新计算当前矩阵
-            if (mMatrixReady == false){
-                recomputeMatrix()
-            }
-            return field
-        }
     // 矩阵是否正确(参数是否改变)
     var mMatrixReady : Boolean? = false
     // 最终绘制的矩阵(通过矩阵乘法得到)
@@ -68,6 +61,17 @@ class Sprite2d (drawable2d: Drawable2d){
         mDrawable = drawable2d
         mColor = FloatArray(4)
         mColor!![3] = 1.0f
+
+        mModelViewMatrix = FloatArray(16)
+        mMatrixReady = false
+    }
+
+    private fun getModelViewMatrix(): FloatArray? {
+        if (!mMatrixReady!!){
+            // 当参数发生变化时 重新计算当前矩阵
+            recomputeMatrix()
+        }
+        return mModelViewMatrix
     }
 
     /**
@@ -81,7 +85,7 @@ class Sprite2d (drawable2d: Drawable2d){
         Matrix.translateM(modelView, 0, mPosX!!, mPosY!!, 0.0f)
         // angle
         if (mAngle != 0.0f){
-            Matrix.rotateM(modelView, 0, mAngle!!, 0.0f, 0.0f, 0.0f)
+            Matrix.rotateM(modelView, 0, mAngle!!, 0.0f, 0.0f, 1.0f)
         }
         // scale
         Matrix.scaleM(modelView, 0, mScaleX!!, mScaleY!!, 1.0f)
@@ -91,7 +95,7 @@ class Sprite2d (drawable2d: Drawable2d){
     // 平面颜色绘制
     public fun draw(program: FlatShadedProgram, projectionMatrix: FloatArray){
         // 计算最终绘制的矩阵
-        Matrix.multiplyMM(mScratchMatrix, 0, projectionMatrix, 0, mModelViewMatrix, 0)
+        Matrix.multiplyMM(mScratchMatrix, 0, projectionMatrix, 0, getModelViewMatrix(), 0)
         // 绘制
         program.draw(
                 mScratchMatrix,
@@ -105,7 +109,7 @@ class Sprite2d (drawable2d: Drawable2d){
     // 纹理绘制
     public fun draw(program: Texture2dProgram, projectionMatrix: FloatArray){
         // 计算最终绘制的矩阵
-        Matrix.multiplyMM(mScratchMatrix, 0, projectionMatrix, 0, mModelViewMatrix, 0)
+        Matrix.multiplyMM(mScratchMatrix, 0, projectionMatrix, 0, getModelViewMatrix(), 0)
         // 绘制
         program.draw(
                 mScratchMatrix,
