@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lqk.videolearn.R;
+import com.lqk.videolearn.render.shape.Circle;
 import com.lqk.videolearn.render.shape.Square;
 import com.lqk.videolearn.render.shape.Triangle;
 import com.lqk.videolearn.render.shape.TriangleColor;
@@ -63,7 +64,7 @@ public class ChooseActivity extends AppCompatActivity {
         add("正三角形", TriangleEquilateral.class);
         add("彩色三角形", TriangleColor.class);
         add("正方形", Square.class);
-//        add("圆形", Oval.class);
+        add("圆形", Circle.class);
 //        add("正方体", Cube.class);
 //        add("圆锥", Cone.class);
 //        add("圆柱", Cylinder.class);
