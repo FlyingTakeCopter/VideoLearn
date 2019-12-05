@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.lqk.videolearn.R;
 import com.lqk.videolearn.render.shape.Triangle;
+import com.lqk.videolearn.render.shape.TriangleColor;
 import com.lqk.videolearn.render.shape.TriangleEquilateral;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class ChooseActivity extends AppCompatActivity {
         mData=new ArrayList<>();
         add("三角形", Triangle.class);
         add("正三角形", TriangleEquilateral.class);
-//        add("彩色三角形", TriangleColorFull.class);
+        add("彩色三角形", TriangleColor.class);
 //        add("正方形", Square.class);
 //        add("圆形", Oval.class);
 //        add("正方体", Cube.class);
