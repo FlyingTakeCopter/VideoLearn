@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lqk.videolearn.R;
+import com.lqk.videolearn.render.shape.Ball;
 import com.lqk.videolearn.render.shape.Circle;
 import com.lqk.videolearn.render.shape.Cone;
 import com.lqk.videolearn.render.shape.Cube;
@@ -71,7 +72,7 @@ public class ChooseActivity extends AppCompatActivity {
         add("正方体", Cube.class);
         add("圆锥", Cone.class);
         add("圆柱", Cylinder.class);
-//        add("球体", Ball.class);
+        add("球体", Ball.class);
 //        add("带光源的球体",BallWithLight.class);
     }
 
