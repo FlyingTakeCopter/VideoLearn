@@ -20,7 +20,9 @@ public class FGLView extends GLSurfaceView {
     private void init(){
         setEGLContextClientVersion(2);
         setRenderer(renderer = new FGLRender(this));
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        // RENDERMODE_WHEN_DIRTY:表示只有在调用requestRender或者onResume等方法时才会进行渲染
+        // RENDERMODE_CONTINUOUSLY:表示持续渲染
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
     public void setShape(Class<? extends Shape> clazz) {

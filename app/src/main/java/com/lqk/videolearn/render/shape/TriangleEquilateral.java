@@ -108,6 +108,10 @@ public class TriangleEquilateral extends Shape {
         // 如果near面在相机的后面或者物体的后面(相对于相机) 那么opengl会判定为物体不在观测范围内 所以要clip
         // far 一定要大于near 否则会报错 表示的意义 类似于游戏里的可见范围 但是是基于near面位置
         // 总结并简化后 故有 near <= eyeZ <= far(这只是最终结果，容易产生误导)
+        //
+        // 还有一种情况，保持near和far不变，调整摄像机的距离，为什么图像会发生改变
+        // 想象 眼前固定位置放一个开着摄像头的手机，观察前方的杯子
+        // 当眼睛往后退的时候，手机和眼睛的距离不变，固定在原地的杯子，在手机上的成像变小了
         float ratio = (float) width/height;
         Matrix.frustumM(projectMatrix, 0, -ratio, ratio, -1, 1, 3, 6);
         // 观察矩阵
@@ -117,6 +121,8 @@ public class TriangleEquilateral extends Shape {
                 0f, 1.0f, 0f);
         // 显示
         Matrix.multiplyMM(displayMatrix, 0, projectMatrix, 0, viewMatrix, 0);
+        // 最终的显示矩阵一定要按照顺序计算:
+        // displayMatrix = projectMatrix * viewMatrix * modelMatrix
     }
 
     @Override
