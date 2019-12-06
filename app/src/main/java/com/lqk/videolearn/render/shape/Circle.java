@@ -23,7 +23,7 @@ import static android.opengl.GLES20.*;
 public class Circle extends Shape {
 
     private int program;
-    private int COORDS_PER_VERTEX = 2;
+    private int COORDS_PER_VERTEX = 3;
     private int vertexStribe = COORDS_PER_VERTEX * FLOAT_SIZE;
     private int vertexCount = 0;
 
@@ -50,8 +50,12 @@ public class Circle extends Shape {
     }
 
     public Circle(View mView) {
+        this(mView, 0.0f);
+    }
+
+    public Circle(View mView,float height) {
         super(mView);
-        vertex = createPositions();
+        vertex = createPositions(height);
         vertexCount = vertex.length / COORDS_PER_VERTEX;
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertex.length * FLOAT_SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -61,14 +65,16 @@ public class Circle extends Shape {
 
     }
 
-    private float[]  createPositions(){
+    private float[]  createPositions(float height){
         ArrayList<Float> data=new ArrayList<>();
         data.add(0.0f);             //设置圆心坐标
         data.add(0.0f);
+        data.add(height);
         float angDegSpan=360f/n;
         for(float i=0;i<360+angDegSpan;i+=angDegSpan){
             data.add((float) (radius*Math.sin(i*Math.PI/180f)));
             data.add((float)(radius*Math.cos(i*Math.PI/180f)));
+            data.add(height);
         }
         float[] f=new float[data.size()];
         for (int i=0;i<f.length;i++){
