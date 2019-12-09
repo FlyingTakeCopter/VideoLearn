@@ -40,6 +40,7 @@ void main(){
             nColor+=texture2D(uTexture,vec2(vCoords.x-uChangeColor.b,vCoords.y+uChangeColor.b));
             nColor+=texture2D(uTexture,vec2(vCoords.x+uChangeColor.b,vCoords.y-uChangeColor.b));
             nColor+=texture2D(uTexture,vec2(vCoords.x+uChangeColor.b,vCoords.y+uChangeColor.b));
+            //shader采样了周边12个点的颜色加上当前点的颜色，就是13个了，除以13得到均值
             nColor/=13.0;
             gl_FragColor=nColor;
         }else if(uChangeType==4){  //放大镜效果
