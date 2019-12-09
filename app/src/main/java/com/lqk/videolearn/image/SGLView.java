@@ -26,10 +26,13 @@ public class SGLView extends GLSurfaceView {
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
         try {
-            render.setBitmap(BitmapFactory.decodeStream(getResources().getAssets().open("image/beauty.jpg")));
+            render.setImage(BitmapFactory.decodeStream(getResources().getAssets().open("image/beauty.jpg")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public SGLRender getRender() {
+        return render;
+    }
 }
