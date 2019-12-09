@@ -21,6 +21,9 @@
         <activity android:name=".render.ChooseActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".image.SGLViewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".image.SGLViewActivity">
+    <com.lqk.videolearn.image.SGLView
+        android:id="@+id/sglview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <Button
+        android:id="@+id/ishalf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onHalfClicked"
+        android:text="显示一半"/>
+
+    <RadioGroup
+        android:id="@+id/filter_radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ishalf"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/filter_origin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="原图" />
+
+        <RadioButton
+            android:id="@+id/filter_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="黑白" />
+
+        <RadioButton
+            android:id="@+id/filter_cold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="冷色" />
+
+        <RadioButton
+            android:id="@+id/filter_warm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="暖色" />
+        <RadioButton
+            android:id="@+id/filter_mohu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="模糊" />
+        <RadioButton
+            android:id="@+id/filter_fdj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="放大镜" />
+    </RadioGroup>
+</RelativeLayout>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.lqk.videolearn.image.SGLViewActivity;
 import com.lqk.videolearn.render.FGLViewActivity;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mList.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         data=new ArrayList<>();
         add("绘制形体", FGLViewActivity.class);
+        add("绘制纹理", SGLViewActivity.class);
 
         mList.setAdapter(new MenuAdapter());
     }
