@@ -6,10 +6,10 @@ void main() {
     gl_Position = uMatrix * aPosition;
 
     float color;
-    if(aPosition.z>0.0){
-        color=aPosition.z;
+    if(aPosition.x>0.0){
+        color=aPosition.x;
     }else{
-        color=-aPosition.z;
+        color=aPosition.x;
     }
     vColor=vec4(color,color,color,1.0);
 }

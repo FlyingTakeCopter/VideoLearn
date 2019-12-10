@@ -24,6 +24,9 @@
         <activity android:name=".image.SGLViewActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".solarsystem.SSViewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

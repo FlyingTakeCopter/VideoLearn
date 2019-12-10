@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.lqk.videolearn.image.SGLViewActivity;
 import com.lqk.videolearn.render.FGLViewActivity;
+import com.lqk.videolearn.solarsystem.SSViewActivity;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         data=new ArrayList<>();
         add("绘制形体", FGLViewActivity.class);
         add("绘制纹理", SGLViewActivity.class);
+        add("太阳系", SSViewActivity.class);
+
 
         mList.setAdapter(new MenuAdapter());
     }
