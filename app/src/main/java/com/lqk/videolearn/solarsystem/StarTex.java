@@ -43,8 +43,15 @@ public class StarTex {
     Resources mRes;
 
     int mTextureId;
-    public StarTex(Resources res) {
+
+    public SSRender.StarEnum getStarInfo() {
+        return eStar;
+    }
+
+    SSRender.StarEnum eStar;
+    public StarTex(Resources res, SSRender.StarEnum star) {
         // TODO Auto-generated constructor stub
+        this.eStar = star;
         this.mRes = res;
         initVertex();
 //        initShader(mProgram);
