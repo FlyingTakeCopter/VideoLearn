@@ -202,7 +202,7 @@ public class CubeTex extends Shape {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTextureId);
 
-        glDrawElements(GL_TRIANGLE_STRIP, index.length, GL_UNSIGNED_SHORT, indexBuffer);
+//        glDrawElements(GL_TRIANGLE_STRIP, index.length, GL_UNSIGNED_SHORT, indexBuffer);
 
         glDisableVertexAttribArray(maPosition);
         glDisableVertexAttribArray(maCoords);

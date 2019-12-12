@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.lqk.videolearn.camera.CameraActivity;
 import com.lqk.videolearn.image.SGLViewActivity;
 import com.lqk.videolearn.render.FGLViewActivity;
 import com.lqk.videolearn.solarsystem.SSViewActivity;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         add("绘制形体", FGLViewActivity.class);
         add("绘制纹理", SGLViewActivity.class);
         add("太阳系", SSViewActivity.class);
+        add("相机", CameraActivity.class);
 
 
         mList.setAdapter(new MenuAdapter());
