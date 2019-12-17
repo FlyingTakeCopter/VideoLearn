@@ -83,9 +83,25 @@ public class SSRender implements GLSurfaceView.Renderer {
                 0,1,0);
     }
 
+    float mAngle = 0f;
+    float angleStep = 1f;
+    float mScale = 1;
+    float scaleStep = 0.05f;
     @Override
     public void onDrawFrame(GL10 gl) {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        varyTools.pushMatrix();
+        if (mScale > 10f || mScale < 1f){
+            scaleStep = -scaleStep;
+        }
+        if (mAngle > 360f){
+            mAngle = 0f;
+        }
+        mAngle += angleStep;
+        mScale += scaleStep;
+        varyTools.scale(mScale,mScale,mScale);
+//        varyTools.rotate(mAngle,1,0,0);
 
         // sun
         varyTools.pushMatrix();//存储原始坐标
@@ -137,6 +153,9 @@ public class SSRender implements GLSurfaceView.Renderer {
 
         //海王星
         drawStar(sNeptune);
+
+        varyTools.popMatrix();
+
     }
 
     private void drawStar(StarTex star){
