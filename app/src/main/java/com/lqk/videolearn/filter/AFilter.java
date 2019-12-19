@@ -103,6 +103,10 @@ public abstract class AFilter {
     protected abstract void onCreate();
     protected abstract void onSizeChange(int width, int height);
 
+    public void setSize(int width, int height){
+        onSizeChange(width, height);
+    }
+
     protected final void createProgram(String vertex, String frag){
         program = GlUtil.createProgramRes(mResources, vertex, frag);
         maPosition = glGetAttribLocation(program, "aPosition");

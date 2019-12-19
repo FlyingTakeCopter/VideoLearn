@@ -13,6 +13,7 @@ import com.lqk.videolearn.camera.CameraActivity;
 import com.lqk.videolearn.image.SGLViewActivity;
 import com.lqk.videolearn.render.FGLViewActivity;
 import com.lqk.videolearn.solarsystem.SSViewActivity;
+import com.lqk.videolearn.vr.VrContextActivity;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         add("绘制纹理", SGLViewActivity.class);
         add("太阳系", SSViewActivity.class);
         add("相机", CameraActivity.class);
+        add("vr", VrContextActivity.class);
 
 
         mList.setAdapter(new MenuAdapter());

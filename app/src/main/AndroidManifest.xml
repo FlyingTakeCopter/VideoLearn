@@ -36,6 +36,9 @@
         <activity android:name=".camera.CameraActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".vr.VrContextActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
