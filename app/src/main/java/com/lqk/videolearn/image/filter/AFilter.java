@@ -108,6 +108,7 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
             //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
             glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
             //绘制纹理
+            // level —- 表示多级分辨率的纹理图像的级数，若只有一种分辨率，则level设为0
             GLUtils.texImage2D(GL_TEXTURE_2D,0,mBitmap,0);
             return texture[0];
         }
@@ -185,16 +186,26 @@ public abstract class AFilter implements GLSurfaceView.Renderer {
 
         glUniformMatrix4fv(muMatrix,1,false,displayMatrix,0);
 
-        //绘制纹理方法
-        //第一种: 让opengl自动处理纹理
-        // 启用0层纹理
-        glActiveTexture(GL_TEXTURE0);
-        // 绑定 textureId
+        /*
+         * 绘制纹理方法 第一种: 让opengl自动处理纹理
+         */
+        // 启用0层纹理 之后的所有操作(绘制)都在这个启用的纹理上
+        glActiveTexture(GL_TEXTURE0);//不启用也可以 因为GL_TEXTURE0是默认启用的
+        // 绑定 textureId 把之前绘制的textureId以GL_TEXTURE_2D的方式
         glBindTexture(GL_TEXTURE_2D, mTextureId);
-        //第二种: 自己处理 片元着色器的uTexture
+
+        /*
+         * 绘制纹理方法 第二种: 自己处理 片元着色器的uTexture
+         * glActiveTexture(GL_TEXTURE0);默认启用的是0层纹理,所以下面不用写
+         */
         // 将0层纹理设置到 片源着色器的 sampler2D
-//        glUniform1i(muTexture, 0);
+//        glUniform1i(muTexture, 0);//这个0 代表GL_TEXTURE0(在glActiveTexture中启用的)
         // 在0层纹理上 绘制图片
+//        createTexture();
+
+        // 如果要在1层纹理上做绘制显示，代码如下
+//        glActiveTexture(GL_TEXTURE1);
+//        glUniform1i(muTexture, 1);
 //        createTexture();
 
         glDrawArrays(GL_TRIANGLE_STRIP,0,vertexCount);
