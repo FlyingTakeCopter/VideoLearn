@@ -8,6 +8,7 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/central/'}
         maven { url 'https://maven.aliyun.com/repository/releases/'}
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin/'}
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
