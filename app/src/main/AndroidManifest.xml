@@ -39,6 +39,8 @@
         <activity android:name=".vr.VrContextActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".glv3.NdkGlesV3Activity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
