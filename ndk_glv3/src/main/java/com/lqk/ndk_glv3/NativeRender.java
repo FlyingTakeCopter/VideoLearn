@@ -6,4 +6,10 @@ public class NativeRender {
     }
 
     public native void native_Mathod();
+
+    public native void native_onSurfaceCreated();
+
+    public native void native_onSurfaceChanged(int width, int height);
+
+    public native void native_onDrawFrame();
 }

@@ -10,6 +10,8 @@ set(jnilibs "${CMAKE_SOURCE_DIR}/../jniLibs")
 
 # 头文件
 include_directories(
+        sample
+        render
         util
 )
 
@@ -21,6 +23,8 @@ include_directories(
 # 引入源文件,相对路径
 file(GLOB src-files
         ${CMAKE_SOURCE_DIR}/*.cpp
+        ${CMAKE_SOURCE_DIR}/render/*cpp
+        ${CMAKE_SOURCE_DIR}/sample/*cpp
         ${CMAKE_SOURCE_DIR}/util/*.cpp)
 
 add_library( # Sets the name of the library.
@@ -66,6 +70,8 @@ target_link_libraries( # Specifies the target library.
 
         # Links the target library to the log library
         # included in the NDK.
-        ${log-lib})
+        ${log-lib}
 #        引入全部三方库
 #        ${third-party-libs}
+        GLESv3
+        )
