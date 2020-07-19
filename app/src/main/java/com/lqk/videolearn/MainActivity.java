@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.ffmpeg_4_2_2.FFmpegMainActivity;
 import com.lqk.videolearn.camera.CameraActivity;
 import com.lqk.videolearn.image.SGLViewActivity;
 import com.lqk.videolearn.render.FGLViewActivity;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         add("太阳系", SSViewActivity.class);
         add("相机", CameraActivity.class);
         add("vr", VrContextActivity.class);
+        add("ffmpeg-learn", FFmpegMainActivity.class);
 
 
         mList.setAdapter(new MenuAdapter());

@@ -1,2 +1,3 @@
-include ':app', ':ndk_glv3'
+include ':app'
 rootProject.name='VideoLearn'
+include ':ffmpeg_4_2_2'
